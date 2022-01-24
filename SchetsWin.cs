@@ -130,10 +130,10 @@ namespace SchetsEditor
             {
                 RadioButton b = new RadioButton();
                 b.Appearance = Appearance.Button;
-                b.Size = new Size(45, 62);
+                b.Size = new Size(45, 45);
                 b.Location = new Point(10, 10 + t * 62);
                 b.Tag = tool;
-                b.Text = tool.ToString();
+                //b.Text = tool.ToString();
                 b.Image = (Image)resourcemanager.GetObject(tool.ToString());
                 b.TextAlign = ContentAlignment.TopCenter;
                 b.ImageAlign = ContentAlignment.BottomCenter;
