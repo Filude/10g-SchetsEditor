@@ -22,7 +22,12 @@ namespace SchetsEditor
         {   ToolStripDropDownItem menu;
             menu = new ToolStripMenuItem("File");
             menu.DropDownItems.Add("Nieuw", null, this.nieuw);
+
+            // Adds an option to the drop down menu to open an existing drawing
+            menu.DropDownItems.Add("Open", null, this.open);
+
             menu.DropDownItems.Add("Exit", null, this.afsluiten);
+
             menuStrip.Items.Add(menu);
         }
         private void maakHelpMenu()
@@ -46,6 +51,25 @@ namespace SchetsEditor
         }
         private void afsluiten(object sender, EventArgs e)
         {   this.Close();
+        }
+
+        // Open an existing drawing
+        private void open(object sender, EventArgs e)
+        {
+            Schets schets = new Schets();
+
+            // Select an existing file and pass it to the reader
+            FileDialog dlg = new OpenFileDialog();
+            dlg.ShowDialog();
+            if (dlg.ShowDialog() == DialogResult.OK)
+                schets.Read(dlg.FileName);
+                
+
+            /*
+            SchetsWin s = new SchetsWin();
+            s.MdiParent = this;
+            s.Show(); 
+            */
         }
 
         private void InitializeComponent()
