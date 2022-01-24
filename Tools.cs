@@ -19,6 +19,7 @@ namespace SchetsEditor
 
         public virtual void MuisVast(SchetsControl s, Point p)
         {   startpunt = p;
+            
         }
         public virtual void MuisLos(SchetsControl s, Point p)
         {   kwast = new SolidBrush(s.PenKleur);
@@ -75,6 +76,7 @@ namespace SchetsEditor
         public override void MuisLos(SchetsControl s, Point p)
         {   base.MuisLos(s, p);
             this.Compleet(s.MaakBitmapGraphics(), this.startpunt, p);
+
             s.Invalidate();
         }
         public override void Letter(SchetsControl s, char c)
@@ -93,7 +95,9 @@ namespace SchetsEditor
 
         public override void Bezig(Graphics g, Point p1, Point p2)
         {   g.DrawRectangle(MaakPen(kwast,3), TweepuntTool.Punten2Rechthoek(p1, p2));
+            
         }
+       
     }
     
     public class VolRechthoekTool : RechthoekTool
@@ -131,5 +135,9 @@ namespace SchetsEditor
         public override void Bezig(Graphics g, Point p1, Point p2)
         {   g.DrawLine(MaakPen(Brushes.White, 7), p1, p2);
         }
+    }
+    public class NewGumTool : PenTool
+    {
+        public override string ToString() { return "New Gum"; }
     }
 }
