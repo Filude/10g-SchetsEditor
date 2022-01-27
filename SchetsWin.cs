@@ -101,12 +101,7 @@ namespace SchetsEditor
             schetscontrol.Location = new Point(64, 10);
             schetscontrol.MouseDown += (object o, MouseEventArgs mea) =>
                                        {
-                                           if (!ShapeNew)
-                                           {
-                                               Shapes.Add(TempShape);
-                                               Console.WriteLine("Added shape to List");
-                                               ShapeNew = true;
-                                           }
+                                           
 
 
                                            TempShape = new Shape();
@@ -131,13 +126,23 @@ namespace SchetsEditor
                                              huidigeTool.MuisLos(schetscontrol, mea.Location);
                                              TempShape.Endpoint = mea.Location;
                                              ShapeNew = !ShapeNew;
+                                             if (!ShapeNew)
+                                             {
+                                                 Shapes.Add(TempShape);
+                                                 Console.WriteLine("Added shape to List");
+                                                 ShapeNew = true;
+                                             }
                                          }
                                          vast = false;
 
                                      };
             schetscontrol.KeyPress += (object o, KeyPressEventArgs kpea) =>
                                       { huidigeTool.Letter(schetscontrol, kpea.KeyChar);
-                                          TempShape.AddLetter(kpea.KeyChar);
+                                          Shape LastShape = Shapes[Shapes.Count - 1];
+                                          if (LastShape.Tool.ToString() == "Text")
+                                          {
+                                              LastShape.AddLetter(kpea.KeyChar);
+                                          }
                                       };
             this.Controls.Add(schetscontrol);
 
