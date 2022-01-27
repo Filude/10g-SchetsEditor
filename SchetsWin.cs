@@ -61,11 +61,17 @@ namespace SchetsEditor
             // Continue if the specified file name is not an empty string
             if (dlg.FileName != "")
             {
-                // Write each line from the given list to text file
+                // Write each line from the Shapes list to text file
                 StreamWriter sw = new StreamWriter(dlg.FileName);
-                foreach (string line in list)
+                foreach (Shape s in Shapes)
                 {
-                    sw.WriteLine(line);    
+                    string result = s.Tool.ToString() + s.c + " " + s.Startpoint.X + " " + s.Startpoint.Y + " " + s.Endpoint.X + " " + s.Endpoint.Y;
+                    
+                    result = result.Replace("Color", "");
+                    result = result.Replace("[", "");
+                    result = result.Replace("]", "");
+
+                    sw.WriteLine(result);    
                 }
                 sw.Close();
             }

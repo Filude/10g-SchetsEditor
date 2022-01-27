@@ -62,7 +62,6 @@ namespace SchetsEditor
                     {
                         case ("PenTool"):
                             color = r[1]; p1 = Int32.Parse(r[2]); p2 = Int32.Parse(r[3]);
-                            Console.WriteLine(r[0] + " " + r[1] + " " + r[2] + " " + r[3]);
                             break;
                         case ("LijnTool"):
                             color = r[1]; p1 = Int32.Parse(r[2]); p2 = Int32.Parse(r[3]);
