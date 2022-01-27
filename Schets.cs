@@ -44,44 +44,10 @@ namespace SchetsEditor
             bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
         }
 
+        //public List<Shape> shapes = new List<Shape>();
+        
 
-        public void Read(string fileName)
-        {
-            StreamReader sr = new StreamReader(fileName);
-            char[] separators = { ' ' };
-            string line, color;
-            int p1, p2;
-
-            while ((line = sr.ReadLine()) != null)
-            {
-                string[] r = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                if (r.Length > 2)
-                {
-                    switch (r[0])
-                    {
-                        case ("PenTool"):
-                            color = r[1]; p1 = Int32.Parse(r[2]); p2 = Int32.Parse(r[3]);
-                            break;
-                        case ("LijnTool"):
-                            color = r[1]; p1 = Int32.Parse(r[2]); p2 = Int32.Parse(r[3]);
-                            break;
-                        case ("RechthoekTool"):
-                            color = r[1]; p1 = Int32.Parse(r[2]); p2 = Int32.Parse(r[3]);
-                            break;
-                        case ("VolRechthoekTool"):
-                            color = r[1]; p1 = Int32.Parse(r[2]); p2 = Int32.Parse(r[3]);
-                            break;
-                        case ("GumTool"):
-                            p1 = Int32.Parse(r[1]); p2 = Int32.Parse(r[2]);
-                            break;
-                        case ("TekstTool"):
-                            color = r[1]; p1 = Int32.Parse(r[2]);
-                            break;
-                    }
-                }
-            }
-        }
+        
 
 
     }
