@@ -10,7 +10,7 @@ namespace SchetsEditor
 {
     public class SchetsWin : Form
     {
-        List<Shape> Shapes = new List<Shape>();
+        public List<Shape> Shapes = new List<Shape>();
         MenuStrip menuStrip;
         SchetsControl schetscontrol;
         ISchetsTool huidigeTool;
@@ -43,9 +43,6 @@ namespace SchetsEditor
             this.Close();
         }
 
-        // Testing
-        List<string> list = new List<string> ();
-
         // Event handler for save file dialogue
         private void opslaan(object sender, EventArgs e)
         {
@@ -53,10 +50,6 @@ namespace SchetsEditor
             dlg.Filter = "Text Files|*.txt";
             dlg.Title = "Sla je tekening op";
             dlg.ShowDialog();
-
-            // Testing 
-            list.Add("LijnTool Blue 50 30 100 100");
-            list.Add("RechthoekTool Red 100 200 300 400");
 
             // Continue if the specified file name is not an empty string
             if (dlg.FileName != "")
@@ -269,7 +262,7 @@ namespace SchetsEditor
             this.ResumeLayout(false);
 
         }
-        private void LoadList(object obj, EventArgs ea)
+        public void LoadList(object obj, EventArgs ea)
         {
             foreach (Shape s in Shapes)
             {
@@ -278,5 +271,101 @@ namespace SchetsEditor
 
         }
 
+
+        public void Read(string fileName)
+        {
+            StreamReader sr = new StreamReader(fileName);
+
+
+            char[] separators = { ' ' };
+            string line;
+
+            while ((line = sr.ReadLine()) != null)
+            {
+                string[] r = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                Shape shape = new Shape();
+
+                if (r.Length > 4)
+                {
+                    switch (r[0])
+                    {
+                        case ("Pen"):
+                            int a1 = Int32.Parse(r[2]);
+                            int b1 = Int32.Parse(r[3]);
+                            int a2 = Int32.Parse(r[4]);
+                            int b2 = Int32.Parse(r[5]);
+
+                            shape.Tool = new PenTool();
+                            shape.c = Color.FromName(r[1]);
+                            shape.Startpoint = new Point(a1, b1);
+                            shape.Endpoint = new Point(a2, b2);
+
+                            Shapes.Add(shape);
+                            break;
+
+                        case ("Lijn"):
+                            int c1 = Int32.Parse(r[2]);
+                            int d1 = Int32.Parse(r[3]);
+                            int c2 = Int32.Parse(r[4]);
+                            int d2 = Int32.Parse(r[5]);
+
+                            shape.Tool = new LijnTool();
+                            shape.c = Color.FromName(r[1]);
+                            shape.Startpoint = new Point(c1, d1);
+                            shape.Endpoint = new Point(c2, d2);
+
+                            Shapes.Add(shape);
+                            break;
+
+                        case ("Kader"):
+                            int e1 = Int32.Parse(r[2]);
+                            int f1 = Int32.Parse(r[3]);
+                            int e2 = Int32.Parse(r[4]);
+                            int f2 = Int32.Parse(r[5]);
+
+                            shape.Tool = new RechthoekTool();
+                            shape.c = Color.FromName(r[1]);
+                            shape.Startpoint = new Point(e1, f1);
+                            shape.Endpoint = new Point(e2, f2);
+
+                            Shapes.Add(shape);
+                            break;
+
+                        case ("Vlak"):
+                            int g1 = Int32.Parse(r[2]);
+                            int h1 = Int32.Parse(r[3]);
+                            int g2 = Int32.Parse(r[4]);
+                            int h2 = Int32.Parse(r[5]);
+
+                            shape.Tool = new VolRechthoekTool();
+                            shape.c = Color.FromName(r[1]);
+                            shape.Startpoint = new Point(g1, h1);
+                            shape.Endpoint = new Point(g2, h2);
+
+                            Shapes.Add(shape);
+                            break;
+
+                        /*
+                        case ("Gum"):
+                            p1 = Int32.Parse(r[1]); p2 = Int32.Parse(r[2]);
+                            break;
+                        */
+
+                        case ("Text"):
+                            int i = Int32.Parse(r[2]);
+                            int j = Int32.Parse(r[3]);
+
+                            shape.Tool = new TekstTool();
+                            shape.c = Color.FromName(r[1]);
+                            shape.Startpoint = new Point(i, j);
+
+                            // Idk what to do with the text
+                            // shape.Chars = r[5].ToCharArray(); ???
+                            Shapes.Add(shape);
+                            break;
+                    }       
+                }
+            }
+        }
     }
 }

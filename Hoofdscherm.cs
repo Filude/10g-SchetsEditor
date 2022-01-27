@@ -44,7 +44,7 @@ namespace SchetsEditor
                            );
         }
 
-        private void nieuw(object sender, EventArgs e)
+        public void nieuw(object sender, EventArgs e)
         {   SchetsWin s = new SchetsWin();
             s.MdiParent = this;
             s.Show();
@@ -58,18 +58,15 @@ namespace SchetsEditor
         {
             Schets schets = new Schets();
 
+            SchetsWin sw = new SchetsWin();
+            sw.MdiParent = this;
+            sw.Show();
+
             // Select an existing file and pass it to the reader
             FileDialog dlg = new OpenFileDialog();
             dlg.ShowDialog();
             if (dlg.ShowDialog() == DialogResult.OK)
-                schets.Read(dlg.FileName);
-                
-
-            /*
-            SchetsWin s = new SchetsWin();
-            s.MdiParent = this;
-            s.Show(); 
-            */
+                sw.Read(dlg.FileName);
         }
 
         private void InitializeComponent()
