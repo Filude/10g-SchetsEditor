@@ -8,7 +8,8 @@ using System.Resources;
 namespace SchetsEditor
 {
     public class SchetsWin : Form
-    {   
+    {
+        List<Shape> Shapes = new List<Shape>();
         MenuStrip menuStrip;
         SchetsControl schetscontrol;
         ISchetsTool huidigeTool;
@@ -21,7 +22,7 @@ namespace SchetsEditor
 
         private void veranderAfmeting(object o, EventArgs ea)
         {
-            schetscontrol.Size = new Size ( this.ClientSize.Width  - 70
+            schetscontrol.Size = new Size(this.ClientSize.Width - 70
                                           , this.ClientSize.Height - 50);
             paneel.Location = new Point(64, this.ClientSize.Height - 30);
         }
@@ -43,7 +44,7 @@ namespace SchetsEditor
 
         public SchetsWin()
         {
-            ISchetsTool[] deTools = { new PenTool()         
+            ISchetsTool[] deTools = { new PenTool()
                                     , new LijnTool()
                                     , new RechthoekTool()
                                     , new VolRechthoekTool()
@@ -52,30 +53,57 @@ namespace SchetsEditor
                                     , new NewGumTool()
                                     };
             String[] deKleuren = { "Black", "Red", "Green", "Blue"
-                                 , "Yellow", "Magenta", "Cyan" 
+                                 , "Yellow", "Magenta", "Cyan"
                                  };
 
             this.ClientSize = new Size(700, 500);
             huidigeTool = deTools[0];
 
             schetscontrol = new SchetsControl();
+            
+            Shape TempShape = new Shape();
+            bool ShapeNew = true;
             schetscontrol.Location = new Point(64, 10);
             schetscontrol.MouseDown += (object o, MouseEventArgs mea) =>
-                                       {   vast=true;  
-                                           huidigeTool.MuisVast(schetscontrol, mea.Location); 
+                                       {
+                                           if (!ShapeNew)
+                                           {
+                                               Shapes.Add(TempShape);
+                                               Console.WriteLine("Added shape to List");
+                                               ShapeNew = true;
+                                           }
+
+
+                                           TempShape = new Shape();
+
+                                           vast = true;
+                                           huidigeTool.MuisVast(schetscontrol, mea.Location);
+                                           TempShape.Startpoint = mea.Location;
+                                           TempShape.Tool = huidigeTool;
+                                           TempShape.c = schetscontrol.PenKleur;
                                        };
             schetscontrol.MouseMove += (object o, MouseEventArgs mea) =>
-                                       {   if (vast)
-                                           huidigeTool.MuisDrag(schetscontrol, mea.Location); 
+                                       { if (vast)
+                                           {
+                                               huidigeTool.MuisDrag(schetscontrol, mea.Location);
+                                               TempShape.AddDragPoint(mea.Location);
+                                           }
+
                                        };
-            schetscontrol.MouseUp   += (object o, MouseEventArgs mea) =>
-                                       {   if (vast)
-                                           huidigeTool.MuisLos (schetscontrol, mea.Location);
-                                           vast = false; 
-                                       };
-            schetscontrol.KeyPress +=  (object o, KeyPressEventArgs kpea) => 
-                                       {   huidigeTool.Letter  (schetscontrol, kpea.KeyChar); 
-                                       };
+            schetscontrol.MouseUp += (object o, MouseEventArgs mea) =>
+                                     { if (vast)
+                                         {
+                                             huidigeTool.MuisLos(schetscontrol, mea.Location);
+                                             TempShape.Endpoint = mea.Location;
+                                             ShapeNew = !ShapeNew;
+                                         }
+                                         vast = false;
+
+                                     };
+            schetscontrol.KeyPress += (object o, KeyPressEventArgs kpea) =>
+                                      { huidigeTool.Letter(schetscontrol, kpea.KeyChar);
+                                          TempShape.AddLetter(kpea.KeyChar);
+                                      };
             this.Controls.Add(schetscontrol);
 
             menuStrip = new MenuStrip();
@@ -91,7 +119,7 @@ namespace SchetsEditor
         }
 
         private void maakFileMenu()
-        {   
+        {
             ToolStripMenuItem menu = new ToolStripMenuItem("File");
             menu.MergeAction = MergeAction.MatchOnly;
             menu.DropDownItems.Add("Sluiten", null, this.afsluiten);
@@ -99,10 +127,10 @@ namespace SchetsEditor
         }
 
         private void maakToolMenu(ICollection<ISchetsTool> tools)
-        {   
+        {
             ToolStripMenuItem menu = new ToolStripMenuItem("Tool");
             foreach (ISchetsTool tool in tools)
-            {   ToolStripItem item = new ToolStripMenuItem();
+            { ToolStripItem item = new ToolStripMenuItem();
                 item.Tag = tool;
                 item.Text = tool.ToString();
                 item.Image = (Image)resourcemanager.GetObject(tool.ToString());
@@ -113,10 +141,10 @@ namespace SchetsEditor
         }
 
         private void maakAktieMenu(String[] kleuren)
-        {   
+        {
             ToolStripMenuItem menu = new ToolStripMenuItem("Aktie");
-            menu.DropDownItems.Add("Clear", null, schetscontrol.Schoon );
-            menu.DropDownItems.Add("Roteer", null, schetscontrol.Roteer );
+            menu.DropDownItems.Add("Clear", null, schetscontrol.Schoon);
+            menu.DropDownItems.Add("Roteer", null, schetscontrol.Roteer);
             ToolStripMenuItem submenu = new ToolStripMenuItem("Kies kleur");
             foreach (string k in kleuren)
                 submenu.DropDownItems.Add(k, null, schetscontrol.VeranderKleurViaMenu);
@@ -146,32 +174,38 @@ namespace SchetsEditor
         }
 
         private void maakAktieButtons(String[] kleuren)
-        {   
+        {
             paneel = new Panel();
             paneel.Size = new Size(600, 24);
             this.Controls.Add(paneel);
-            
+
             Button b; Label l; ComboBox cbb;
-            b = new Button(); 
-            b.Text = "Clear";  
-            b.Location = new Point(  0, 0); 
-            b.Click += schetscontrol.Schoon; 
+            b = new Button();
+            b.Text = "Clear";
+            b.Location = new Point(0, 0);
+            b.Click += schetscontrol.Schoon;
             paneel.Controls.Add(b);
-            
-            b = new Button(); 
-            b.Text = "Rotate"; 
-            b.Location = new Point( 80, 0); 
-            b.Click += schetscontrol.Roteer; 
+
+            b = new Button();
+            b.Text = "Rotate";
+            b.Location = new Point(80, 0);
+            b.Click += schetscontrol.Roteer;
             paneel.Controls.Add(b);
-            
-            l = new Label();  
-            l.Text = "Penkleur:"; 
-            l.Location = new Point(180, 3); 
-            l.AutoSize = true;               
+
+            b = new Button();
+            b.Text = "Load List";
+            b.Location = new Point(160, 0);
+            b.Click += LoadList;
+            paneel.Controls.Add(b);
+
+            l = new Label();
+            l.Text = "Penkleur:";
+            l.Location = new Point(180, 3);
+            l.AutoSize = true;
             paneel.Controls.Add(l);
-            
-            cbb = new ComboBox(); cbb.Location = new Point(240, 0); 
-            cbb.DropDownStyle = ComboBoxStyle.DropDownList; 
+
+            cbb = new ComboBox(); cbb.Location = new Point(240, 0);
+            cbb.DropDownStyle = ComboBoxStyle.DropDownList;
             cbb.SelectedValueChanged += schetscontrol.VeranderKleur;
             foreach (string k in kleuren)
                 cbb.Items.Add(k);
@@ -191,5 +225,14 @@ namespace SchetsEditor
             this.ResumeLayout(false);
 
         }
+        private void LoadList(object obj, EventArgs ea)
+        {
+            foreach (Shape s in Shapes)
+            {
+                s.Load(schetscontrol);
+            }
+
+        }
+
     }
 }

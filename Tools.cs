@@ -6,30 +6,36 @@ namespace SchetsEditor
 {
     public interface ISchetsTool
     {
+        
         void MuisVast(SchetsControl s, Point p);
         void MuisDrag(SchetsControl s, Point p);
         void MuisLos(SchetsControl s, Point p);
         void Letter(SchetsControl s, char c);
+        
     }
 
     public abstract class StartpuntTool : ISchetsTool
     {
+        
         protected Point startpunt;
         protected Brush kwast;
 
         public virtual void MuisVast(SchetsControl s, Point p)
         {   startpunt = p;
-            
         }
         public virtual void MuisLos(SchetsControl s, Point p)
         {   kwast = new SolidBrush(s.PenKleur);
         }
         public abstract void MuisDrag(SchetsControl s, Point p);
         public abstract void Letter(SchetsControl s, char c);
+
+        
     }
 
     public class TekstTool : StartpuntTool
     {
+        
+        string tekst;
         public override string ToString() { return "Text"; }
 
         public override void MuisDrag(SchetsControl s, Point p) { }
@@ -40,7 +46,7 @@ namespace SchetsEditor
             {
                 Graphics gr = s.MaakBitmapGraphics();
                 Font font = new Font("Tahoma", 40);
-                string tekst = c.ToString();
+                tekst = c.ToString();
                 SizeF sz = 
                 gr.MeasureString(tekst, font, this.startpunt, StringFormat.GenericTypographic);
                 gr.DrawString   (tekst, font, kwast, 
@@ -50,6 +56,7 @@ namespace SchetsEditor
                 s.Invalidate();
             }
         }
+      
     }
 
     public abstract class TweepuntTool : StartpuntTool
