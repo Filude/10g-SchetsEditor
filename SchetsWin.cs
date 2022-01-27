@@ -80,7 +80,7 @@ namespace SchetsEditor
                                     , new GumTool()
                                     };
             String[] deKleuren = { "Black", "Red", "Green", "Blue"
-                                 , "Yellow", "Magenta", "Cyan"
+                                 , "Yellow", "Magenta", "Cyan", "White"
                                  };
 
             this.ClientSize = new Size(700, 500);
@@ -95,7 +95,7 @@ namespace SchetsEditor
                                        {
                                            
 
-
+                                           // Temporary shape to write to
                                            TempShape = new Shape();
 
                                            vast = true;
@@ -111,7 +111,7 @@ namespace SchetsEditor
                                                TempShape.AddDragPoint(mea.Location);
                                                if (huidigeTool.ToString() == "Gum")
                                                {
-                                                   
+                                                   // Check for overlap if the current tool is the eraser
                                                    CheckOverlap(mea.Location);
                                                }
                                                 }
@@ -126,7 +126,6 @@ namespace SchetsEditor
                                              if (!ShapeNew)
                                              {
                                                  Shapes.Add(TempShape);
-                                                 Console.WriteLine("Added shape to List");
                                                  ShapeNew = true;
                                              }
                                          }
@@ -233,6 +232,8 @@ namespace SchetsEditor
             b.Click += schetscontrol.Roteer;
             paneel.Controls.Add(b);
 
+
+            // Load list button
             b = new Button();
             b.Text = "Load List";
             b.Location = new Point(160, 0);
@@ -266,6 +267,7 @@ namespace SchetsEditor
             this.ResumeLayout(false);
 
         }
+        // Load all shapes given by a list of shapes
         public void LoadList(object obj, EventArgs ea)
         {
             foreach (Shape s in Shapes)
@@ -274,9 +276,11 @@ namespace SchetsEditor
             }
 
         }
+
+        // Checks for overlapping shapes. Not finished, unfortunately
         public void CheckOverlap(Point p)
         {
-            Console.WriteLine("Tried to check for overlap at"+ p);
+            Console.WriteLine("Tried to check for overlap at"+ p); // debugging
             foreach (Shape s in Shapes)
             {
                 string str = s.Tool.ToString();
@@ -295,25 +299,27 @@ namespace SchetsEditor
                             {
                                 Console.WriteLine("Deleted Vlak");
                                 Shapes.Remove(s);
-
+                                
+                                foreach (Shape s2 in Shapes)
+                                {
+                                    s2.Load(schetscontrol);
+                                }
                             }
                             break;
                         }
-
                     }
                 break;
             }
         }
 
-
+        // This function reads a txt file for drawing instructions
         public void Read(string fileName)
         {
             StreamReader sr = new StreamReader(fileName);
-
-
             char[] separators = { ' ' };
             string line;
 
+            // Ensure the line is not empty
             while ((line = sr.ReadLine()) != null)
             {
                 string[] r = line.Split(separators, StringSplitOptions.RemoveEmptyEntries);
@@ -321,7 +327,7 @@ namespace SchetsEditor
 
                 if (r.Length > 4)
                 {
-                    switch (r[0])
+                    switch (r[0]) // Checks all possible Tool instructions
                     {
                         case ("Pen"):
                             int a1 = Int32.Parse(r[2]);
@@ -329,6 +335,7 @@ namespace SchetsEditor
                             int a2 = Int32.Parse(r[4]);
                             int b2 = Int32.Parse(r[5]);
 
+                            // Add instructions to a Shape object
                             shape.Tool = new PenTool();
                             shape.c = Color.FromName(r[1]);
                             shape.Startpoint = new Point(a1, b1);
@@ -379,22 +386,18 @@ namespace SchetsEditor
                             Shapes.Add(shape);
                             break;
 
-                        /*
-                        case ("Gum"):
-                            p1 = Int32.Parse(r[1]); p2 = Int32.Parse(r[2]);
-                            break;
-                        */
-
-                        case ("Text"):
+                        case ("Tekst"):
                             int i = Int32.Parse(r[2]);
                             int j = Int32.Parse(r[3]);
 
                             shape.Tool = new TekstTool();
                             shape.c = Color.FromName(r[1]);
                             shape.Startpoint = new Point(i, j);
+                            foreach (char c in r[4])
+                            {
+                                shape.Chars.Add(c);
+                            }
 
-                            // Idk what to do with the text
-                            // shape.Chars = r[5].ToCharArray(); ???
                             Shapes.Add(shape);
                             break;
                     }       

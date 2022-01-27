@@ -9,9 +9,9 @@ namespace SchetsEditor
 {
     public class Shape
     {
-        List<Point> DragPoints = new List<Point>();
+        public List<Point> DragPoints = new List<Point>();
 
-        List<char> Chars = new List<char>();
+        public List<char> Chars = new List<char>();
         public Point Startpoint { get; set; }
         public Point Endpoint { get; set; }
         public Color c { get; set; }
@@ -27,7 +27,6 @@ namespace SchetsEditor
         public void AddLetter(char c)
         {
             Chars.Add(c);
-            Console.WriteLine($"Added {c} to the chars!!!");
         }
         public void CheckOverlap()
         {

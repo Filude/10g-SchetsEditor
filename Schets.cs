@@ -43,12 +43,5 @@ namespace SchetsEditor
         {
             bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
         }
-
-        //public List<Shape> shapes = new List<Shape>();
-        
-
-        
-
-
     }
 }
