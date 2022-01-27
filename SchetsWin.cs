@@ -85,7 +85,6 @@ namespace SchetsEditor
                                     , new VolRechthoekTool()
                                     , new TekstTool()
                                     , new GumTool()
-                                    , new NewGumTool()
                                     };
             String[] deKleuren = { "Black", "Red", "Green", "Blue"
                                  , "Yellow", "Magenta", "Cyan"
@@ -117,7 +116,12 @@ namespace SchetsEditor
                                            {
                                                huidigeTool.MuisDrag(schetscontrol, mea.Location);
                                                TempShape.AddDragPoint(mea.Location);
-                                           }
+                                               if (huidigeTool.ToString() == "Gum")
+                                               {
+                                                   
+                                                   CheckOverlap(mea.Location);
+                                               }
+                                                }
 
                                        };
             schetscontrol.MouseUp += (object o, MouseEventArgs mea) =>
@@ -142,7 +146,7 @@ namespace SchetsEditor
                                           if (LastShape.Tool.ToString() == "Text")
                                           {
                                               LastShape.AddLetter(kpea.KeyChar);
-                                          }
+                                          }         
                                       };
             this.Controls.Add(schetscontrol);
 
@@ -276,6 +280,36 @@ namespace SchetsEditor
                 s.Load(schetscontrol);
             }
 
+        }
+        public void CheckOverlap(Point p)
+        {
+            Console.WriteLine("Tried to check for overlap at"+ p);
+            foreach (Shape s in Shapes)
+            {
+                string str = s.Tool.ToString();
+                Console.WriteLine(str);
+                switch(str)
+                    {
+                    case "Lijn":
+                        {
+                            Console.WriteLine("Checked a Lijn");
+                            break;
+                        }
+                    case "Vlak":
+                        {
+                            Console.WriteLine("Checked a Vlak");
+                            if (s.Startpoint.X < p.X && p.X < s.Endpoint.X && s.Startpoint.Y < p.Y && p.Y < s.Endpoint.Y)
+                            {
+                                Console.WriteLine("Deleted Vlak");
+                                Shapes.Remove(s);
+
+                            }
+                            break;
+                        }
+
+                    }
+                break;
+            }
         }
 
     }

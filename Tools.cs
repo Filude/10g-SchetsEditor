@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Collections.Generic;
 
 namespace SchetsEditor
 {
@@ -16,7 +17,7 @@ namespace SchetsEditor
 
     public abstract class StartpuntTool : ISchetsTool
     {
-        
+       
         protected Point startpunt;
         protected Brush kwast;
 
@@ -138,13 +139,16 @@ namespace SchetsEditor
     public class GumTool : PenTool
     {
         public override string ToString() { return "Gum"; }
-
         public override void Bezig(Graphics g, Point p1, Point p2)
-        {   g.DrawLine(MaakPen(Brushes.White, 7), p1, p2);
+        {
+            
         }
+        public override void MuisDrag(SchetsControl s, Point p)
+        {
+            
+        }
+
+      
     }
-    public class NewGumTool : PenTool
-    {
-        public override string ToString() { return "New Gum"; }
-    }
+    
 }

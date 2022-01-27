@@ -29,6 +29,10 @@ namespace SchetsEditor
             Chars.Add(c);
             Console.WriteLine($"Added {c} to the chars!!!");
         }
+        public void CheckOverlap()
+        {
+
+        }
         public void Load(SchetsControl s)
         {
             s.SetPenKleur = c;
