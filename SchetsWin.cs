@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Resources;
+using System.IO;
 
 namespace SchetsEditor
 {
@@ -40,6 +41,34 @@ namespace SchetsEditor
         private void afsluiten(object obj, EventArgs ea)
         {
             this.Close();
+        }
+
+        // Testing
+        List<string> list = new List<string> ();
+
+        // Event handler for save file dialogue
+        private void opslaan(object sender, EventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "Text Files|*.txt";
+            dlg.Title = "Sla je tekening op";
+            dlg.ShowDialog();
+
+            // Testing 
+            list.Add("LijnTool Blue 50 30 100 100");
+            list.Add("RechthoekTool Red 100 200 300 400");
+
+            // Continue if the specified file name is not an empty string
+            if (dlg.FileName != "")
+            {
+                // Write each line from the given list to text file
+                StreamWriter sw = new StreamWriter(dlg.FileName);
+                foreach (string line in list)
+                {
+                    sw.WriteLine(line);    
+                }
+                sw.Close();
+            }
         }
 
         public SchetsWin()
@@ -122,6 +151,10 @@ namespace SchetsEditor
         {
             ToolStripMenuItem menu = new ToolStripMenuItem("File");
             menu.MergeAction = MergeAction.MatchOnly;
+
+            // Added a drop down menu item for saving current drawing
+            menu.DropDownItems.Add("Opslaan", null, this.opslaan);
+
             menu.DropDownItems.Add("Sluiten", null, this.afsluiten);
             menuStrip.Items.Add(menu);
         }
