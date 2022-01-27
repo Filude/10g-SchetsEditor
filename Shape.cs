@@ -27,15 +27,20 @@ namespace SchetsEditor
         public void AddLetter(char c)
         {
             Chars.Add(c);
+            Console.WriteLine($"Added {c} to the chars!!!");
         }
         public void Load(SchetsControl s)
         {
             s.SetPenKleur = c;
             Tool.MuisVast(s, Startpoint);
-            foreach (Point DragPoint in DragPoints)
+            if (Tool.ToString() == "Pen")
             {
-                Tool.MuisDrag(s, DragPoint);
+                foreach (Point DragPoint in DragPoints)
+                {
+                    Tool.MuisDrag(s, DragPoint);
+                }
             }
+
             Tool.MuisLos(s, Endpoint);
             foreach (char c in Chars)
             {
@@ -44,5 +49,5 @@ namespace SchetsEditor
 
         }
     }
-
 }
+      
