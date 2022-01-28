@@ -58,8 +58,16 @@ namespace SchetsEditor
                 StreamWriter sw = new StreamWriter(dlg.FileName);
                 foreach (Shape s in Shapes)
                 {
-                    string result = s.Tool.ToString() + s.c + " " + s.Startpoint.X + " " + s.Startpoint.Y + " " + s.Endpoint.X + " " + s.Endpoint.Y;
-                    
+                    string result = s.Tool.ToString() + s.c + " " + s.Startpoint.X + " " + s.Startpoint.Y + " " + s.Endpoint.X + " " + s.Endpoint.Y + " ";
+                    string r = "";
+
+                    foreach (Point p in s.DragPoints)
+                    {
+                        r = r + p.X.ToString() + " " + p.Y.ToString() + " ";
+                    }
+
+                    result = result + r;
+
                     result = result.Replace("Color", "");
                     result = result.Replace("[", "");
                     result = result.Replace("]", "");
@@ -368,6 +376,12 @@ namespace SchetsEditor
                             int b1 = Int32.Parse(r[3]);
                             int a2 = Int32.Parse(r[4]);
                             int b2 = Int32.Parse(r[5]);
+
+                            for (int z = 6; z < r.Length; z = z + 2)
+                            {
+                                shape.DragPoints.Add(new Point(Int32.Parse(r[z]), Int32.Parse(r[z+1])));
+                            }
+                            
 
                             // Add instructions to a Shape object
                             shape.Tool = new PenTool();
