@@ -98,6 +98,15 @@ namespace SchetsEditor
             
             Shape TempShape = new Shape();
             bool ShapeNew = true;
+
+            void GumOverlapCheck(Point pp)
+                {
+                if (huidigeTool.ToString() == "Gum")
+                {
+                    // Check for overlap if the current tool is the eraser
+                    CheckOverlap(pp);
+                }
+            }
             schetscontrol.Location = new Point(64, 10);
             schetscontrol.MouseDown += (object o, MouseEventArgs mea) =>
                                        {
@@ -111,17 +120,14 @@ namespace SchetsEditor
                                            TempShape.Startpoint = mea.Location;
                                            TempShape.Tool = huidigeTool;
                                            TempShape.c = schetscontrol.PenKleur;
+                                           GumOverlapCheck(mea.Location);
                                        };
             schetscontrol.MouseMove += (object o, MouseEventArgs mea) =>
                                        { if (vast)
                                            {
                                                huidigeTool.MuisDrag(schetscontrol, mea.Location);
                                                TempShape.AddDragPoint(mea.Location);
-                                               if (huidigeTool.ToString() == "Gum")
-                                               {
-                                                   // Check for overlap if the current tool is the eraser
-                                                   CheckOverlap(mea.Location);
-                                               }
+                                               GumOverlapCheck(mea.Location);
                                                 }
 
                                        };
