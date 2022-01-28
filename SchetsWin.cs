@@ -237,7 +237,7 @@ namespace SchetsEditor
             b = new Button();
             b.Text = "Load List";
             b.Location = new Point(160, 0);
-            b.Click += LoadList;
+            b.Click += LoadListClick;
             paneel.Controls.Add(b);
 
             l = new Label();
@@ -268,7 +268,14 @@ namespace SchetsEditor
 
         }
         // Load all shapes given by a list of shapes
-        public void LoadList(object obj, EventArgs ea)
+
+
+        void LoadListClick(object obj, EventArgs ea)
+        {
+            LoadList();
+        }
+
+        public void LoadList()
         {
             foreach (Shape s in Shapes)
             {
@@ -290,6 +297,7 @@ namespace SchetsEditor
                     case "Lijn":
                         {
                             Console.WriteLine("Checked a Lijn");
+
                             break;
                         }
                     case "Vlak":
@@ -329,6 +337,8 @@ namespace SchetsEditor
                 {
                     switch (r[0]) // Checks all possible Tool instructions
                     {
+                        //Not implemented properly, doesnt load the list of dragged points
+
                         case ("Pen"):
                             int a1 = Int32.Parse(r[2]);
                             int b1 = Int32.Parse(r[3]);
@@ -403,6 +413,7 @@ namespace SchetsEditor
                     }       
                 }
             }
+            LoadList();
         }
     }
 }
