@@ -287,7 +287,17 @@ namespace SchetsEditor
         // Checks for overlapping shapes. Not finished, unfortunately
         public void CheckOverlap(Point p)
         {
-            Console.WriteLine("Tried to check for overlap at"+ p); // debugging
+            bool ElementX = false;
+            void Delet(Shape xs)
+            {
+                ElementX = true;
+                Console.WriteLine($"Deleted {xs.Tool.ToString()}");
+                Shapes.Remove(xs);
+                schetscontrol.Schets.Schoon();
+                LoadList();
+
+            }
+            //Console.WriteLine("Tried to check for overlap at"+ p); // debugging
             foreach (Shape s in Shapes)
             {
                 string str = s.Tool.ToString();
@@ -305,19 +315,40 @@ namespace SchetsEditor
                             Console.WriteLine("Checked a Vlak");
                             if (s.Startpoint.X < p.X && p.X < s.Endpoint.X && s.Startpoint.Y < p.Y && p.Y < s.Endpoint.Y)
                             {
-                                Console.WriteLine("Deleted Vlak");
-                                Shapes.Remove(s);
-                                
-                                foreach (Shape s2 in Shapes)
+                                Delet(s);
+                            }
+                            break;
+                        }
+                    case "Pen":
+                        {
+                            break;
+                        }
+                    case "Kader":
+                        {
+                            int margin = 10;
+                            Console.WriteLine("Checked a Vlak");
+                            if (s.Startpoint.X < p.X && p.X < s.Endpoint.X && s.Startpoint.Y < p.Y && p.Y < s.Endpoint.Y)
+                            {
+                                if (s.Startpoint.X+margin < p.X && p.X < s.Endpoint.X-margin && s.Startpoint.Y+margin < p.Y && p.Y < s.Endpoint.Y-margin)
                                 {
-                                    s2.Load(schetscontrol);
+                                    break;
                                 }
+                                    Delet(s);
+
+
                             }
                             break;
                         }
                     }
-                break;
+
+
+                if (ElementX)
+                {
+                    ElementX = false;
+                    break;
+                }
             }
+        
         }
 
         // This function reads a txt file for drawing instructions
