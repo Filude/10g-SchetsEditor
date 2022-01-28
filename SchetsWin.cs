@@ -268,14 +268,11 @@ namespace SchetsEditor
 
         }
         // Load all shapes given by a list of shapes
-
-
         void LoadListClick(object obj, EventArgs ea)
         {
             LoadList();
         }
-
-        public void LoadList()
+        public void LoadList() //this is in a seperate method so that non-buttons can call the function lol
         {
             foreach (Shape s in Shapes)
             {
@@ -306,13 +303,10 @@ namespace SchetsEditor
                     {
                     case "Lijn":
                         {
-                            Console.WriteLine("Checked a Lijn");
-
                             break;
                         }
                     case "Vlak":
                         {
-                            Console.WriteLine("Checked a Vlak");
                             if (s.Startpoint.X < p.X && p.X < s.Endpoint.X && s.Startpoint.Y < p.Y && p.Y < s.Endpoint.Y)
                             {
                                 Delet(s);
@@ -326,7 +320,7 @@ namespace SchetsEditor
                     case "Kader":
                         {
                             int margin = 10;
-                            Console.WriteLine("Checked a Vlak");
+                            
                             if (s.Startpoint.X < p.X && p.X < s.Endpoint.X && s.Startpoint.Y < p.Y && p.Y < s.Endpoint.Y)
                             {
                                 if (s.Startpoint.X+margin < p.X && p.X < s.Endpoint.X-margin && s.Startpoint.Y+margin < p.Y && p.Y < s.Endpoint.Y-margin)
@@ -340,7 +334,6 @@ namespace SchetsEditor
                             break;
                         }
                     }
-
 
                 if (ElementX)
                 {
