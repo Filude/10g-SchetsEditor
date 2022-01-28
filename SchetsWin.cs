@@ -312,11 +312,30 @@ namespace SchetsEditor
             foreach (Shape s in Shapes)
             {
                 string str = s.Tool.ToString();
-                Console.WriteLine(str);
+                //Console.WriteLine(str);
                 switch(str)
                     {
                     case "Lijn":
                         {
+                            int range = 10;
+                            int difX = p.X - s.Startpoint.X;
+                            int difY = p.Y - s.Startpoint.Y;
+                            int xx = s.Endpoint.X - s.Startpoint.X;
+                            int yy = s.Endpoint.Y - s.Startpoint.Y;
+                            
+                            float fact = (float)yy / xx;
+                            Console.WriteLine(fact*difX);
+                            if(difX*fact < difY+5 && difX * fact > difY-5)
+                            {
+                                Delet(s);
+                            }
+                            
+                           
+                            break;
+                        }
+                    case "Pen":
+                        {
+
                             break;
                         }
                     case "Vlak":
@@ -327,10 +346,12 @@ namespace SchetsEditor
                             }
                             break;
                         }
-                    case "Pen":
+                    case "Text":
                         {
+
                             break;
                         }
+                    
                     case "Kader":
                         {
                             int margin = 10;
@@ -341,9 +362,7 @@ namespace SchetsEditor
                                 {
                                     break;
                                 }
-                                    Delet(s);
-
-
+                                Delet(s);
                             }
                             break;
                         }
