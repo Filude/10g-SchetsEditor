@@ -235,9 +235,9 @@ namespace SchetsEditor
 
             Button b; Label l; ComboBox cbb;
             b = new Button();
-            b.Text = "Clear";
+            b.Text = "Undo";
             b.Location = new Point(0, 0);
-            b.Click += schetscontrol.Schoon;
+            b.Click += this.undo;
             paneel.Controls.Add(b);
 
             b = new Button();
@@ -247,9 +247,9 @@ namespace SchetsEditor
             paneel.Controls.Add(b);
 
 
-            // Load list button
+             //Load list button also for DB
             b = new Button();
-            b.Text = "Load List";
+            b.Text = "Load fix";
             b.Location = new Point(160, 0);
             b.Click += LoadListClick;
             paneel.Controls.Add(b);
@@ -268,7 +268,15 @@ namespace SchetsEditor
             cbb.SelectedIndex = 0;
             paneel.Controls.Add(cbb);
         }
-
+        private void undo(object o, EventArgs e)
+        {
+            if (Shapes.Count > 0)
+            {
+                Shapes.RemoveAt(Shapes.Count-1);
+                LoadList();
+            }
+            
+         }
         private void InitializeComponent()
         {
             this.SuspendLayout();
@@ -288,10 +296,12 @@ namespace SchetsEditor
         }
         public void LoadList() //this is in a seperate method so that non-buttons can call the function lol
         {
+            schetscontrol.Schets.Schoon();
             foreach (Shape s in Shapes)
             {
                 s.Load(schetscontrol);
             }
+            
 
         }
 
@@ -304,28 +314,28 @@ namespace SchetsEditor
                 ElementX = true;
                 Console.WriteLine($"Deleted {xs.Tool.ToString()}");
                 Shapes.Remove(xs);
-                schetscontrol.Schets.Schoon();
+                
                 LoadList();
 
             }
-            //Console.WriteLine("Tried to check for overlap at"+ p); // debugging
+            //Console.WriteLine("Tried to check for overlap at"+ p); //DB
             foreach (Shape s in Shapes)
             {
                 string str = s.Tool.ToString();
-                //Console.WriteLine(str);
+                //Console.WriteLine(str); //DB
                 switch(str)
                     {
                     case "Lijn":
                         {
-                            int range = 10;
+                            int range = 5;
                             int difX = p.X - s.Startpoint.X;
                             int difY = p.Y - s.Startpoint.Y;
                             int xx = s.Endpoint.X - s.Startpoint.X;
                             int yy = s.Endpoint.Y - s.Startpoint.Y;
                             
                             float fact = (float)yy / xx;
-                            Console.WriteLine(fact*difX);
-                            if(difX*fact < difY+5 && difX * fact > difY-5)
+                            //Console.WriteLine(fact*difX); //DB
+                            if(difX*fact < difY+range && difX * fact > difY-range)
                             {
                                 Delet(s);
                             }
@@ -335,7 +345,17 @@ namespace SchetsEditor
                         }
                     case "Pen":
                         {
-
+                            int range = 3;
+                            foreach(Point dp in s.DragPoints)
+                            {
+                                int xx = dp.X - p.X;
+                                int yy = dp.Y - p.Y;
+                                if (xx < range && xx > -range && yy < range && yy > -range)
+                                {
+                                    Delet(s);
+                                    break;
+                                }
+                            }
                             break;
                         }
                     case "Vlak":
@@ -348,8 +368,13 @@ namespace SchetsEditor
                         }
                     case "Text":
                         {
+                            
+                            if (s.Startpoint.X < p.X && p.X < s.Startpoint.X + 30 && s.Startpoint.Y + 10 < p.Y && p.Y < s.Startpoint.Y + 40)
+                            {
+                                Delet(s);
+                            }
 
-                            break;
+                                break;
                         }
                     
                     case "Kader":

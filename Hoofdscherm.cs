@@ -32,18 +32,22 @@ namespace SchetsEditor
         }
         private void maakHelpMenu()
         {   ToolStripDropDownItem menu;
-            menu = new ToolStripMenuItem("Help");
+            menu = new ToolStripMenuItem("About");
             menu.DropDownItems.Add("Over \"Schets\"", null, this.about);
+            menu.DropDownItems.Add("Info", null, this.info);
             menuStrip.Items.Add(menu);
         }
         private void about(object o, EventArgs ea)
-        {   MessageBox.Show("Schets versie 1.0\n(c) UU Informatica 2010"
+        {   MessageBox.Show("Schets modified\n(c) Finn & Wouter,  UU 2022"
                            , "Over \"Schets\""
                            , MessageBoxButtons.OK
                            , MessageBoxIcon.Information
                            );
         }
-
+        private void info(object o, EventArgs ea)
+        {
+            MessageBox.Show("De gum tool verwijdert bij alleen klikken het onderste element, dus wat als eerst getekend is \nOm tekst te verwijderen moet je de gum tool op de eerste letter gebruiken.\n", "Info");
+        }
         public void nieuw(object sender, EventArgs e)
         {   SchetsWin s = new SchetsWin();
             s.MdiParent = this;
